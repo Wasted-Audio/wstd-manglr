@@ -91,6 +91,12 @@ protected:
 
     void showCrshr(int crshstep, float hundred, float KnobFlags)
     {
+        auto intense = (pow((float)fcrshr * -1.0f + 514.0f, 2.0f) / 2500.0f - 20.0f) / 5.0f;
+        auto CrshrActive = ColorBright(Green, intense);
+        auto CrshrHovered = ColorBright(GreenBr, intense);
+
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)CrshrActive);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)CrshrHovered);
         if (ImGuiKnobs::KnobInt(
             "Crshr", &fcrshr, 2, 512, crshstep, "%i",
             ImGuiKnobVariant_SteppedTick, hundred, KnobFlags, 9))
@@ -103,13 +109,20 @@ protected:
             }
             setParameterValue(0, fcrshr);
         }
+        ImGui::PopStyleColor(2);
         ImGui::SameLine();
     }
 
     void showFldr(float elevstep, float hundred, float KnobFlags)
     {
+        auto intense = (ffldr * 7.5f - 20.0f) / 5.0f;
+        auto FldrActive  = ColorBright(Red, intense);
+        auto FldrHovered = ColorBright(RedBr, intense);
+
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)FldrActive);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)FldrHovered);
         if (ImGuiKnobs::Knob(
-            "Fldr", &ffldr, 1.0f, 11.0f, elevstep, "%.2f",
+            "Fldr", &ffldr, 1.0f, 13.37f, elevstep, "%.2f",
             ImGuiKnobVariant_SteppedTick, hundred, KnobFlags, 11))
         {
             if (ImGui::IsItemActivated())
@@ -120,13 +133,20 @@ protected:
             }
             setParameterValue(1, ffldr);
         }
+        ImGui::PopStyleColor(2);
         ImGui::SameLine();
     }
 
     void showSmthr(float elevstep, float hundred, float KnobFlags)
     {
+        auto intense = (fsmthr * 7.5f - 20.0f) / 5.0f;
+        auto SmthrActive  = ColorBright(Blue, intense);
+        auto SmthrHovered = ColorBright(BlueBr, intense);
+
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)SmthrActive);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)SmthrHovered);
         if (ImGuiKnobs::Knob(
-            "Smthr", &fsmthr, 1.0f, 11.0f, elevstep, "%.2f",
+            "Smthr", &fsmthr, 1.0f, 13.37f, elevstep, "%.2f",
             ImGuiKnobVariant_SteppedTick, hundred, KnobFlags, 11))
         {
             if (ImGui::IsItemActivated())
@@ -148,12 +168,14 @@ protected:
         const float width = getWidth();
         const float height = getHeight();
         const float margin = 0.0f;
+        auto scaleFactor = getScaleFactor();
 
         ImGui::SetNextWindowPos(ImVec2(margin, margin));
         ImGui::SetNextWindowSize(ImVec2(width - 2 * margin, height - 2 * margin));
 
         ImGuiStyle& style = ImGui::GetStyle();
         style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
+        style.ChildBorderSize = 1.0f * scaleFactor;
 
         style.Colors[ImGuiCol_TitleBgActive] = (ImVec4)WstdTitleBgActive;
         style.Colors[ImGuiCol_WindowBg] = (ImVec4)WstdWindowBg;
@@ -178,7 +200,6 @@ protected:
         auto MixActive       = ColorMix(TimeActive, Yellow, intense, fmix);
         auto MixHovered      = ColorMix(TimeHovered, YellowBr, intense, fmix);
 
-        auto scaleFactor = getScaleFactor();
         const float hundred = 100 * scaleFactor;
         const float toggleWidth = 20 * scaleFactor;
         const float comboWidth = 51 * scaleFactor;
@@ -216,35 +237,8 @@ protected:
 
             ImGui::Dummy(ImVec2(5.0f * scaleFactor, 0.0f));
             ImGui::SameLine();
-            // ImGui::BeginGroup();
-            // {
-            //     Title text
-            //     ImGui::PushStyleColor(ImGuiCol_Text, TextClr);
-            //     CenterTextX("Sqnc", comboWidth);
-            //     ImGui::PopStyleColor();
 
-            //     ImGui::Dummy(ImVec2(0.0f, 35.0f) * scaleFactor);
-
-            //     ImGui::PushItemWidth(comboWidth);
-            //     if (ImGui::BeginCombo("##Sqnc", sqnc_list[fsqnc]))
-            //     {
-            //         for (int n = 0; n < 6; n++)
-            //         {
-            //             bool is_selected = (fsqnc == n);
-            //             if (ImGui::Selectable(sqnc_list[n], is_selected))
-            //             {
-            //                 fsqnc = n;
-            //                 editParameter(5, true);
-            //                 setParameterValue(5, fsqnc);
-            //             }
-            //             if (is_selected)
-            //                 ImGui::SetItemDefaultFocus();
-            //         }
-            //         ImGui::EndCombo();
-            //     }
-            //     ImGui::PopItemWidth();
-            // }
-            // ImGui::EndGroup();
+            ImGui::PushStyleColor(ImGuiCol_Text, TextClr);
             if (ImGui::BeginListBox("##Sqnc", ImVec2(comboWidth, 122 * scaleFactor)))
             {
                 for (int n = 0; n < 6; n++)
@@ -261,43 +255,57 @@ protected:
                 }
                 ImGui::EndListBox();
             }
+            ImGui::PopStyleColor();
             ImGui::SameLine();
 
             ImGui::Dummy(ImVec2(5.0f * scaleFactor, 0.0f));
             ImGui::SameLine();
 
-            switch (fsqnc) {
-                case 0:
-                    showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
-                    showFldr(elevstep, hundred, ImGuiKnob_Flags);
-                    showSmthr(elevstep, hundred, ImGuiKnob_Flags);
-                    break;
-                case 1:
-                    showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
-                    showSmthr(elevstep, hundred, ImGuiKnob_Flags);
-                    showFldr(elevstep, hundred, ImGuiKnob_Flags);
-                    break;
-                case 2:
-                    showFldr(elevstep, hundred, ImGuiKnob_Flags);
-                    showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
-                    showSmthr(elevstep, hundred, ImGuiKnob_Flags);
-                    break;
-                case 3:
-                    showFldr(elevstep, hundred, ImGuiKnob_Flags);
-                    showSmthr(elevstep, hundred, ImGuiKnob_Flags);
-                    showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
-                    break;
-                case 4:
-                    showSmthr(elevstep, hundred, ImGuiKnob_Flags);
-                    showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
-                    showFldr(elevstep, hundred, ImGuiKnob_Flags);
-                    break;
-                case 5:
-                    showSmthr(elevstep, hundred, ImGuiKnob_Flags);
-                    showFldr(elevstep, hundred, ImGuiKnob_Flags);
-                    showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
-                    break;
+            {
+                ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar;
+                ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+                ImGui::BeginChild("FX", ImVec2(333 * scaleFactor, 121 * scaleFactor), true, window_flags);
+
+                switch (fsqnc) {
+                    case 0:
+                        showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
+                        showFldr(elevstep, hundred, ImGuiKnob_Flags);
+                        showSmthr(elevstep, hundred, ImGuiKnob_Flags);
+                        break;
+                    case 1:
+                        showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
+                        showSmthr(elevstep, hundred, ImGuiKnob_Flags);
+                        showFldr(elevstep, hundred, ImGuiKnob_Flags);
+                        break;
+                    case 2:
+                        showFldr(elevstep, hundred, ImGuiKnob_Flags);
+                        showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
+                        showSmthr(elevstep, hundred, ImGuiKnob_Flags);
+                        break;
+                    case 3:
+                        showFldr(elevstep, hundred, ImGuiKnob_Flags);
+                        showSmthr(elevstep, hundred, ImGuiKnob_Flags);
+                        showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
+                        break;
+                    case 4:
+                        showSmthr(elevstep, hundred, ImGuiKnob_Flags);
+                        showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
+                        showFldr(elevstep, hundred, ImGuiKnob_Flags);
+                        break;
+                    case 5:
+                        showSmthr(elevstep, hundred, ImGuiKnob_Flags);
+                        showFldr(elevstep, hundred, ImGuiKnob_Flags);
+                        showCrshr(crshstep, hundred, ImGuiKnob_FlagsLog);
+                        break;
+                }
+
+                ImGui::EndChild();
+                ImGui::PopStyleVar();
             }
+            ImGui::SameLine();
+
+            ImGui::Dummy(ImVec2(5.0f * scaleFactor, 0.0f));
+            ImGui::SameLine();
 
             ImGui::BeginGroup();
             {
