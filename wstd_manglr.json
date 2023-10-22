@@ -14,15 +14,15 @@
         "midi_output": 0,
         "enumerators": {
             "Sqnc": [
-                "C>F>S",
-                "C>S>F",
-                "F>C>S",
-                "F>S>C",
-                "S>C>F",
-                "S>F>C"
+                "C~F~S",
+                "C~S~F",
+                "F~C~S",
+                "F~S~C",
+                "S~C~F",
+                "S~F~C"
             ]
         },
-        "version": "0, 0, 1",
+        "version": "0, 1, 0",
         "license": "GPL-3.0-or-later",
         "homepage": "https://wasted.audio/software/wstd_manglr",
         "plugin_uri": "https://wasted.audio/software/wstd_manglr",

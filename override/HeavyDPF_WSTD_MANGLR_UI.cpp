@@ -44,6 +44,7 @@ public:
 
         io.Fonts->AddFontFromMemoryCompressedTTF((void*)veramobd_compressed_data, veramobd_compressed_size, 16.0f * getScaleFactor(), &fc);
         io.Fonts->AddFontFromMemoryCompressedTTF((void*)veramobd_compressed_data, veramobd_compressed_size, 21.0f * getScaleFactor(), &fc);
+        io.Fonts->AddFontFromMemoryCompressedTTF((void*)veramobd_compressed_data, veramobd_compressed_size, 12.5f * getScaleFactor(), &fc);
         io.Fonts->Build();
         io.FontDefault = io.Fonts->Fonts[1];
 
@@ -183,6 +184,7 @@ protected:
         ImGuiIO& io(ImGui::GetIO());
         ImFont* defaultFont = ImGui::GetFont();
         ImFont* titleBarFont = io.Fonts->Fonts[2];
+        ImFont* mediumFont = io.Fonts->Fonts[3];
 
         auto intense = 20.0f / 5.0f;
 
@@ -202,7 +204,7 @@ protected:
 
         const float hundred = 100 * scaleFactor;
         const float toggleWidth = 20 * scaleFactor;
-        const float comboWidth = 51 * scaleFactor;
+        const float comboWidth = 42 * scaleFactor;
 
         auto crshstep = 8;
         auto elevstep = 0.1f;
@@ -216,12 +218,12 @@ protected:
         }
 
         const char* sqnc_list[6] = {
-            "C>F>S",
-            "C>S>F",
-            "F>C>S",
-            "F>S>C",
-            "S>C>F",
-            "S>F>C",
+            "C~F~S",
+            "C~S~F",
+            "F~C~S",
+            "F~S~C",
+            "S~C~F",
+            "S~F~C",
         };
 
         auto backgroundDrawlist = ImGui::GetBackgroundDrawList();
@@ -230,7 +232,7 @@ protected:
         ImGui::PushFont(titleBarFont);
         if (ImGui::Begin("WSTD MANGLR", nullptr, ImGuiWindowFlags_NoResize + ImGuiWindowFlags_NoCollapse))
         {
-            ImGui::Dummy(ImVec2(0.0f, 8.0f * scaleFactor));
+            ImGui::Dummy(ImVec2(0.0f, 6.0f * scaleFactor));
             ImGui::PushFont(defaultFont);
             auto ImGuiKnob_Flags = ImGuiKnobFlags_DoubleClickReset + ImGuiKnobFlags_ValueTooltip + ImGuiKnobFlags_NoInput + ImGuiKnobFlags_ValueTooltipHideOnClick;
             auto ImGuiKnob_FlagsLog = ImGuiKnob_Flags + ImGuiKnobFlags_Logarithmic;
@@ -238,24 +240,36 @@ protected:
             ImGui::Dummy(ImVec2(5.0f * scaleFactor, 0.0f));
             ImGui::SameLine();
 
-            ImGui::PushStyleColor(ImGuiCol_Text, TextClr);
-            if (ImGui::BeginListBox("##Sqnc", ImVec2(comboWidth, 122 * scaleFactor)))
+            ImGui::BeginGroup();
             {
-                for (int n = 0; n < 6; n++)
+                ImGui::Dummy(ImVec2(0.0f, 9.0f * scaleFactor));
+
+                ImGui::PushStyleColor(ImGuiCol_Text,            TextClr);
+                ImGui::PushStyleColor(ImGuiCol_FrameBg,         (ImVec4)ColorMix(WstdWindowBg, BlueDr, 0.5f, 50.0f));
+                ImGui::PushStyleColor(ImGuiCol_Header,          (ImVec4)BlueDr);
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered,   (ImVec4)Blue);
+                ImGui::PushStyleColor(ImGuiCol_HeaderActive,    (ImVec4)BlueBr);
+                ImGui::PushFont(mediumFont);
+                if (ImGui::BeginListBox("##Sqnc", ImVec2(comboWidth, 101 * scaleFactor)))
                 {
-                    bool is_selected = (fsqnc == n);
-                    if (ImGui::Selectable(sqnc_list[n], is_selected))
+                    for (int n = 0; n < 6; n++)
                     {
-                        fsqnc = n;
-                        editParameter(5, true);
-                        setParameterValue(5, fsqnc);
+                        bool is_selected = (fsqnc == n);
+                        if (ImGui::Selectable(sqnc_list[n], is_selected))
+                        {
+                            fsqnc = n;
+                            editParameter(5, true);
+                            setParameterValue(5, fsqnc);
+                        }
+                        if (is_selected)
+                            ImGui::SetItemDefaultFocus();
                     }
-                    if (is_selected)
-                        ImGui::SetItemDefaultFocus();
+                    ImGui::EndListBox();
                 }
-                ImGui::EndListBox();
+                ImGui::PopStyleColor(5);
             }
-            ImGui::PopStyleColor();
+            ImGui::EndGroup();
+            ImGui::PushFont(defaultFont);
             ImGui::SameLine();
 
             ImGui::Dummy(ImVec2(5.0f * scaleFactor, 0.0f));
@@ -264,7 +278,7 @@ protected:
             {
                 ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar;
                 ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-                ImGui::BeginChild("FX", ImVec2(333 * scaleFactor, 121 * scaleFactor), true, window_flags);
+                ImGui::BeginChild("FX", ImVec2(333 * scaleFactor, 127 * scaleFactor), true, window_flags);
 
                 switch (fsqnc) {
                     case 0:
@@ -307,52 +321,59 @@ protected:
             ImGui::Dummy(ImVec2(5.0f * scaleFactor, 0.0f));
             ImGui::SameLine();
 
+
             ImGui::BeginGroup();
             {
-                // Title text
-                ImGui::PushStyleColor(ImGuiCol_Text, TextClr);
-                CenterTextX("Lmtr", toggleWidth);
-                ImGui::PopStyleColor();
+                ImGui::Dummy(ImVec2(0.0f, 4.0f * scaleFactor));
 
-                ImGui::Dummy(ImVec2(0.0f, 35.0f) * scaleFactor);
+                ImGui::BeginGroup();
+                {
+                    // Title text
+                    ImGui::PushStyleColor(ImGuiCol_Text, TextClr);
+                    CenterTextX("Lmtr", toggleWidth);
+                    ImGui::PopStyleColor();
 
-                // knob
-                ImGui::PushStyleColor(ImGuiCol_Text,            (ImVec4)SyncSw);
+                    ImGui::Dummy(ImVec2(0.0f, 35.0f) * scaleFactor);
 
-                // inactive colors
-                ImGui::PushStyleColor(ImGuiCol_FrameBg,         (ImVec4)SyncGr);
-                ImGui::PushStyleColor(ImGuiCol_FrameBgHovered,  (ImVec4)SyncGrHovered);
+                    // knob
+                    ImGui::PushStyleColor(ImGuiCol_Text,            (ImVec4)SyncSw);
 
-                // active colors
-                ImGui::PushStyleColor(ImGuiCol_Button,          (ImVec4)SyncAct);
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)SyncActHovered);
-                if (ImGui::Toggle("##Lmtr", &flmtr, ImGuiToggleFlags_Animated))
+                    // inactive colors
+                    ImGui::PushStyleColor(ImGuiCol_FrameBg,         (ImVec4)SyncGr);
+                    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered,  (ImVec4)SyncGrHovered);
+
+                    // active colors
+                    ImGui::PushStyleColor(ImGuiCol_Button,          (ImVec4)SyncAct);
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)SyncActHovered);
+                    if (ImGui::Toggle("##Lmtr", &flmtr, ImGuiToggleFlags_Animated))
+                    {
+                        if (ImGui::IsItemActivated())
+                        {
+                            editParameter(2, true);
+                            setParameterValue(2, flmtr);
+                        }
+                    }
+                    ImGui::PopStyleColor(5);
+                }
+                ImGui::EndGroup();
+                ImGui::SameLine();
+
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)MixActive);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)MixHovered);
+                if (ImGuiKnobs::Knob(
+                    "Mix", &fmix, 0.0f, 100.0f, percstep, "%.1f%%", ImGuiKnobVariant_SteppedTick, hundred, ImGuiKnob_Flags, 11))
                 {
                     if (ImGui::IsItemActivated())
                     {
-                        editParameter(2, true);
-                        setParameterValue(2, flmtr);
+                        editParameter(3, true);
+                        if (ImGui::IsMouseDoubleClicked(0))
+                            fmix = 50.0f;
                     }
+                    setParameterValue(3, fmix);
                 }
-                ImGui::PopStyleColor(5);
+                ImGui::PopStyleColor(2);
             }
             ImGui::EndGroup();
-            ImGui::SameLine();
-
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)MixActive);
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)MixHovered);
-            if (ImGuiKnobs::Knob(
-                "Mix", &fmix, 0.0f, 100.0f, percstep, "%.1f%%", ImGuiKnobVariant_SteppedTick, hundred, ImGuiKnob_Flags, 11))
-            {
-                if (ImGui::IsItemActivated())
-                {
-                    editParameter(3, true);
-                    if (ImGui::IsMouseDoubleClicked(0))
-                        fmix = 50.0f;
-                }
-                setParameterValue(3, fmix);
-            }
-            ImGui::PopStyleColor(2);
 
             if (ImGui::IsItemDeactivated())
             {
