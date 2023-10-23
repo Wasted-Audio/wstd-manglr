@@ -10,3 +10,6 @@
 [submodule "dep/heavylib"]
 	path = dep/heavylib
 	url = git@github.com:Wasted-Audio/heavylib.git
+[submodule "dep/wstd.cmpnnts"]
+	path = dep/wstd.cmpnnts
+	url = git@github.com:Wasted-Audio/wstd.cmpnnts.git
