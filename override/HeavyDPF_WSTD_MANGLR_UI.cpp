@@ -188,19 +188,13 @@ protected:
 
         auto intense = 20.0f / 5.0f;
 
-        auto CrossActive     = ColorBright(Red, intense);
-        auto CrossHovered    = ColorBright(RedBr, intense);
-        auto TimeActive      = ColorBright(Green, intense);
-        auto TimeHovered     = ColorBright(GreenBr, intense);
         auto SyncSw          = ColorBright(WhiteDr, intense);
         auto SyncGr          = ColorBright(Grey, intense);
         auto SyncGrHovered   = ColorBright(GreyBr, intense);
         auto SyncAct         = ColorBright(GreenDr, intense);
         auto SyncActHovered  = ColorBright(Green, intense);
-        auto FeedbackActive  = ColorBright(Blue, intense);
-        auto FeedbackHovered = ColorBright(BlueBr, intense);
-        auto MixActive       = ColorMix(TimeActive, Yellow, intense, fmix);
-        auto MixHovered      = ColorMix(TimeHovered, YellowBr, intense, fmix);
+        auto MixActive       = ColorMix(Green, Yellow, intense, fmix);
+        auto MixHovered      = ColorMix(GreenBr, YellowBr, intense, fmix);
 
         const float hundred = 100 * scaleFactor;
         const float toggleWidth = 20 * scaleFactor;
