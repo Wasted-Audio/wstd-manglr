@@ -220,9 +220,6 @@ protected:
             "S~F~C",
         };
 
-        auto backgroundDrawlist = ImGui::GetBackgroundDrawList();
-        backgroundDrawlist->AddRectFilled(ImVec2(20, 20), ImVec2(200, 200), (ImU32)100, (float)0.5f);
-
         ImGui::PushFont(titleBarFont);
         if (ImGui::Begin("WSTD MANGLR", nullptr, ImGuiWindowFlags_NoResize + ImGuiWindowFlags_NoCollapse))
         {
