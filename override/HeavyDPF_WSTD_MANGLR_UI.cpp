@@ -267,7 +267,7 @@ protected:
             ImGui::SameLine();
 
             {
-                ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar;
+                ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar + ImGuiWindowFlags_NoScrollWithMouse;
                 ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
                 ImGui::BeginChild("FX", ImVec2(333 * scaleFactor, 127 * scaleFactor), true, window_flags);
 
