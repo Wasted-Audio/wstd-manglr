@@ -7,7 +7,7 @@
         ],
         "enable_ui": true,
         "ui_size": {
-            "width": 606,
+            "width": 707,
             "height": 191
         },
         "midi_input": 0,
@@ -22,7 +22,7 @@
                 "S~F~C"
             ]
         },
-        "version": "1, 0, 2",
+        "version": "1, 1, 0",
         "license": "GPL-3.0-or-later",
         "homepage": "https://wasted.audio/software/wstd_manglr",
         "plugin_uri": "https://wasted.audio/software/wstd_manglr",
