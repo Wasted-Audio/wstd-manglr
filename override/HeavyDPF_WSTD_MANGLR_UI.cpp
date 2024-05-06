@@ -172,6 +172,7 @@ protected:
             }
             setParameterValue(SMTHR, fsmthr);
         }
+        ImGui::PopStyleColor(2);
         ImGui::SameLine();
     }
 
@@ -242,6 +243,7 @@ protected:
         if (ImGui::Begin("WSTD MANGLR", nullptr, ImGuiWindowFlags_NoResize + ImGuiWindowFlags_NoCollapse))
         {
             ImGui::Dummy(ImVec2(0.0f, 6.0f * scaleFactor));
+            ImGui::PopFont();
             ImGui::PushFont(defaultFont);
             auto ImGuiKnob_Flags = ImGuiKnobFlags_DoubleClickReset + ImGuiKnobFlags_ValueTooltip + ImGuiKnobFlags_NoInput + ImGuiKnobFlags_ValueTooltipHideOnClick;
             auto ImGuiKnob_FlagsLog = ImGuiKnob_Flags + ImGuiKnobFlags_Logarithmic;
@@ -252,6 +254,7 @@ protected:
             ImGui::BeginGroup();
             {
                 ImGui::Dummy(ImVec2(0.0f, 9.0f * scaleFactor));
+                ImGui::PopFont();
 
                 ImGui::PushStyleColor(ImGuiCol_Text,            TextClr);
                 ImGui::PushStyleColor(ImGuiCol_FrameBg,         (ImVec4)ColorMix(WstdWindowBg, BlueDr, 0.5f, 50.0f));
@@ -277,6 +280,7 @@ protected:
                 }
                 ImGui::PopStyleColor(5);
             }
+            ImGui::PopFont();
             ImGui::EndGroup();
             ImGui::PushFont(defaultFont);
             ImGui::SameLine();
@@ -414,6 +418,7 @@ protected:
                 editParameter(SMTHR, false);
                 editParameter(SQNC, false);
             }
+            ImGui::PopFont();
         }
         ImGui::End();
     }
