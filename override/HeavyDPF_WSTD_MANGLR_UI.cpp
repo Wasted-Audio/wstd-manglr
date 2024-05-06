@@ -10,10 +10,21 @@
 START_NAMESPACE_DISTRHO
 
 // --------------------------------------------------------------------------------------------------------------------
+enum HeavyParams {
+    CRSHR,
+    FLDR,
+    GAIN,
+    LMTR,
+    MIX,
+    SMTHR,
+    SQNC,
+};
+
 class ImGuiPluginUI : public UI
 {
     int fcrshr = 512;
     float ffldr = 1.0f;
+    float fgain = 0.0f;
     bool flmtr = 1.0f != 0.0f;
     float fmix = 50.0f;
     float fsmthr = 1.0f;
@@ -62,22 +73,25 @@ protected:
     void parameterChanged(uint32_t index, float value) override
     {
         switch (index) {
-            case 0:
+            case CRSHR:
                 fcrshr = value;
                 break;
-            case 1:
+            case FLDR:
                 ffldr = value;
                 break;
-            case 2:
+            case GAIN:
+                fgain = value;
+                break;
+            case LMTR:
                 flmtr = value != 0.0f;
                 break;
-            case 3:
+            case MIX:
                 fmix = value;
                 break;
-            case 4:
+            case SMTHR:
                 fsmthr = value;
                 break;
-            case 5:
+            case SQNC:
                 fsqnc = value;
                 break;
 
@@ -104,11 +118,11 @@ protected:
         {
             if (ImGui::IsItemActivated())
             {
-                editParameter(0, true);
+                editParameter(CRSHR, true);
                 if (ImGui::IsMouseDoubleClicked(0))
                     fcrshr = 512;
             }
-            setParameterValue(0, fcrshr);
+            setParameterValue(CRSHR, fcrshr);
         }
         ImGui::PopStyleColor(2);
         ImGui::SameLine();
@@ -128,11 +142,11 @@ protected:
         {
             if (ImGui::IsItemActivated())
             {
-                editParameter(1, true);
+                editParameter(FLDR, true);
                 if (ImGui::IsMouseDoubleClicked(0))
                     ffldr = 1.0f;
             }
-            setParameterValue(1, ffldr);
+            setParameterValue(FLDR, ffldr);
         }
         ImGui::PopStyleColor(2);
         ImGui::SameLine();
@@ -152,11 +166,11 @@ protected:
         {
             if (ImGui::IsItemActivated())
             {
-                editParameter(4, true);
+                editParameter(SMTHR, true);
                 if (ImGui::IsMouseDoubleClicked(0))
                     fsmthr = 1.0f;
             }
-            setParameterValue(4, fsmthr);
+            setParameterValue(SMTHR, fsmthr);
         }
         ImGui::SameLine();
     }
@@ -186,13 +200,15 @@ protected:
         ImFont* titleBarFont = io.Fonts->Fonts[2];
         ImFont* mediumFont = io.Fonts->Fonts[3];
 
-        auto intense = 20.0f / 5.0f;
+        auto intense = (20.0f + (4.0f * fgain)) / 5.0f;
 
         auto SyncSw          = ColorBright(WhiteDr, intense);
         auto SyncGr          = ColorBright(Grey, intense);
         auto SyncGrHovered   = ColorBright(GreyBr, intense);
         auto SyncAct         = ColorBright(GreenDr, intense);
         auto SyncActHovered  = ColorBright(Green, intense);
+        auto GainActive      = ColorBright(Green, intense);
+        auto GainHovered     = ColorBright(GreenBr, intense);
         auto MixActive       = ColorMix(Green, Yellow, intense, fmix);
         auto MixHovered      = ColorMix(GreenBr, YellowBr, intense, fmix);
 
@@ -203,12 +219,14 @@ protected:
         auto crshstep = 8;
         auto elevstep = 0.1f;
         auto percstep = 1.0f;
+        auto dbstep   = 0.1f;
 
         if (io.KeyShift)
         {
             crshstep = 1;
             elevstep = 0.01f;
             percstep = 0.1f;
+            dbstep = 0.01f;
         }
 
         const char* sqnc_list[6] = {
@@ -249,8 +267,8 @@ protected:
                         if (ImGui::Selectable(sqnc_list[n], is_selected))
                         {
                             fsqnc = n;
-                            editParameter(5, true);
-                            setParameterValue(5, fsqnc);
+                            editParameter(SQNC, true);
+                            setParameterValue(SQNC, fsqnc);
                         }
                         if (is_selected)
                             ImGui::SetItemDefaultFocus();
@@ -340,11 +358,31 @@ protected:
                     {
                         if (ImGui::IsItemActivated())
                         {
-                            editParameter(2, true);
-                            setParameterValue(2, flmtr);
+                            editParameter(LMTR, true);
+                            setParameterValue(LMTR, flmtr);
                         }
                     }
                     ImGui::PopStyleColor(5);
+                }
+                ImGui::EndGroup();
+                ImGui::SameLine();
+
+                ImGui::BeginGroup();
+                {
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)GainActive);
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)GainHovered);
+                    if (ImGuiKnobs::Knob(
+                        "Gain", &fgain, -20.0f, 0.0f, dbstep, "%.2fdB", ImGuiKnobVariant_SteppedTick, hundred, ImGuiKnob_Flags, 5))
+                    {
+                        if (ImGui::IsItemActivated())
+                        {
+                            editParameter(GAIN, true);
+                            if (ImGui::IsMouseDoubleClicked(0))
+                                fgain = 0.0f;
+                        }
+                        setParameterValue(GAIN, fgain);
+                    }
+                    ImGui::PopStyleColor(2);
                 }
                 ImGui::EndGroup();
                 ImGui::SameLine();
@@ -356,11 +394,11 @@ protected:
                 {
                     if (ImGui::IsItemActivated())
                     {
-                        editParameter(3, true);
+                        editParameter(MIX, true);
                         if (ImGui::IsMouseDoubleClicked(0))
                             fmix = 50.0f;
                     }
-                    setParameterValue(3, fmix);
+                    setParameterValue(MIX, fmix);
                 }
                 ImGui::PopStyleColor(2);
             }
@@ -368,12 +406,13 @@ protected:
 
             if (ImGui::IsItemDeactivated())
             {
-                editParameter(0, false);
-                editParameter(1, false);
-                editParameter(2, false);
-                editParameter(3, false);
-                editParameter(4, false);
-                editParameter(5, false);
+                editParameter(CRSHR, false);
+                editParameter(FLDR, false);
+                editParameter(GAIN, false);
+                editParameter(LMTR, false);
+                editParameter(MIX, false);
+                editParameter(SMTHR, false);
+                editParameter(SQNC, false);
             }
         }
         ImGui::End();
