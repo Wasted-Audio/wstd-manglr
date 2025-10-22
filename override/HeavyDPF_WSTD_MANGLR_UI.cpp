@@ -172,6 +172,7 @@ protected:
             }
             setParameterValue(SMTHR, fsmthr);
         }
+        ImGui::PopStyleColor(2);
         ImGui::SameLine();
     }
 
@@ -276,9 +277,9 @@ protected:
                     ImGui::EndListBox();
                 }
                 ImGui::PopStyleColor(5);
+                ImGui::PopFont();
             }
             ImGui::EndGroup();
-            ImGui::PushFont(defaultFont);
             ImGui::SameLine();
 
             ImGui::Dummy(ImVec2(5.0f * scaleFactor, 0.0f));
@@ -414,7 +415,10 @@ protected:
                 editParameter(SMTHR, false);
                 editParameter(SQNC, false);
             }
+
+            ImGui::PopFont();
         }
+        ImGui::PopFont();
         ImGui::End();
     }
 
