@@ -34,7 +34,8 @@
             "lv2_sep",
             "vst2",
             "vst3",
-            "clap"
+            "clap",
+            "au"
         ],
         "lv2_info": "lv2:DistortionPlugin",
         "vst3_info": "Fx|Distortion|Stereo",
