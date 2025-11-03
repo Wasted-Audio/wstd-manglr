@@ -23,6 +23,9 @@
             ]
         },
         "version": "1, 1, 0",
+        "brand_id": "Wstd",
+        "brand_id_no_vst3": true,
+        "unique_id": "Mang",
         "license": "GPL-3.0-or-later",
         "homepage": "https://wasted.audio/software/wstd_manglr",
         "plugin_uri": "https://wasted.audio/software/wstd_manglr",
